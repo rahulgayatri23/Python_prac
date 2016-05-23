@@ -1,10 +1,14 @@
+#Check for palindrome
 from __future__ import print_function
 import random
 import sys
 import os
-from datetime import date
+import itertools
 
-ip_string = raw_input('Give the string to be checked for palindrome : ')
-list_string = list(ip_string)
+list_string = list(raw_input('Give the string to be checked for palindrome : '))
+rev_str = str(list_string)[::-1]
 
-print(list_string)
+if(list_string == rev_str) : 
+        print('string %s is a palidrome'%list_string)
+else : 
+        print('string %s is NOT a palidrome'%list_string)
