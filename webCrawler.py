@@ -4,6 +4,7 @@ import urlparse
 import mechanize
 
 url = "https://moose.ncbs.res.in/"
+depth = 0
 #url = "http://www.thehindu.com/sport"
 #url = "http://www.google.com"
 #base = "http://www.google.com"
@@ -39,7 +40,7 @@ br.set_handle_robots(False) #Am not a robot
 urls = [url]
 visited = [url]
 
-while len(urls)>0 : 
+while len(urls)>0 and depth < 10: 
         try : 
                 br.open(urls[0])
                 urls.pop(0)
@@ -54,6 +55,7 @@ while len(urls)>0 :
                                 visited.append(newurl)
                                 urls.append(newurl)
                                 #print newurl
+                depth+=1
         except : 
                 urls.pop(0)
                 print '""""""""ERROR : BROKEN PAGE **********' 
