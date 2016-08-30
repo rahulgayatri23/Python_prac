@@ -15,12 +15,22 @@ def printBoardSkeleton(boardSize) :
                 print_hzline(boardSize)
                 print_vrline(boardSize)
         print_hzline(boardSize)
+        print('\n')
 
 def fillBoard(boardSize) : 
 
         firstRow = list(input('Enter the first row elements seperated by a comma : '))
         secondRow = list(input('Enter the second row elements seperated by a comma : '))
         thirdRow = list(input('Enter the third row  elements seperated by a comma : '))
+        board = [firstRow, secondRow, thirdRow]
+
+        return board
+
+def InitStage(boardSize) : 
+        firstRow = [0,0,0]
+        secondRow = [0,0,0]
+        thirdRow = [0,0,0]
+
         board = [firstRow, secondRow, thirdRow]
 
         return board
@@ -39,7 +49,8 @@ def diagonalMatch(board) :
         if board[0][0] != 0 : 
                 if board[0][0] == board[1][1] == board[2][2] : 
                         return board[1][1]
-        else : 
+
+        if board[0][2] != 0 :
                 if board[0][2] == board[1][1] == board[2][0] : 
                         return board[0][2]
 
@@ -97,19 +108,76 @@ def whoIsWinner(board, boardSize) :
         if winner != 0 : 
                 return winner
 
+        return winner
+
+def isInBound(playerInput) : 
+        if int(playerInput[0]) > 2 or int(playerInput[2]) > 2 : 
+                return 0
+        else : 
+                return 1
+
+
+def playGame(board, boardSize) : 
+        index = 0
+        winner = 0
+        gameSts = str(raw_input('\'C\' for Continue, \'Q\' for Quit : '))
+
+        while(gameSts != 'Q') : 
+                if index%2 == 0 : 
+                        playerInput = list(raw_input('Player 1 enter your input : '))
+                        if isInBound(playerInput) : 
+                                board[int(playerInput[0])][int(playerInput[2])] = 'X'
+                                printBoard(board, boardSize)
+    
+                                #check if player 1 has won already
+                                winner = whoIsWinner(board, boardSize)
+                                if winner != 0 : 
+                                        return winner
+                        else : 
+                                print('Player 1: Loose your chance as you are out of bounds')
+                else : 
+                        playerInput = list(raw_input('Player 2 enter your input : '))
+                        if isInBound(playerInput) : 
+                                board[int(playerInput[0])][int(playerInput[2])] = 'Y'
+                                printBoard(board, boardSize)
+
+                                #check if player 2 has won already
+                                winner = whoIsWinner(board, boardSize)
+                                if winner != 0 : 
+                                        return winner
+                        else : 
+                                print('Player 2: Loose your chance as you are out of bounds')
+
+                index+=1
+                gameSts = str(raw_input('\'C\' for Continue, \'Q\' for Quit : '))
+                
+        return winner
+
+
 def main() :
+                print('********* X - represents player 1 \n *********Y-represents player 2*********')
+                print('*********Alternatively player 1 and 2 will enter their input into the board*********')
+                print('*********The input should be of the form \'row,column\' where the player wants to place his move in the current board*********')
+                print('*********The index starts from 0, board size-1. So the left top corner index is \(0,0\) and the bottom right corner index is \(2,2\)*******' )
 
-        boardSize = int(raw_input('Enter the size of the board  that you want : '))
-        print('\n\n Tic Tac Toe board of size %d\n\n'%boardSize)
-        #printBoardSkeleton(boardSize)
+                boardSize = int(raw_input('Enter the size of the board  that you want : '))
 
-        board = fillBoard(boardSize)
-        printBoard(board, boardSize)
+        #       printBoardSkeleton(boardSize)
+        #
+        #        board = fillBoard(boardSize)
+        #        printBoard(board, boardSize)
+        #
+        #        winner = whoIsWinner(board, boardSize)
+        #
+                print('\n\n Tic Tac Toe board of size %d\n\n'%boardSize)
 
-        winner = whoIsWinner(board, boardSize)
+                board = InitStage(boardSize)
+                printBoard(board, boardSize)
 
-        if winner != 0 : 
-                print('The Winner is ', winner)
+
+                winner = playGame(board, boardSize)
+                if winner != 0 : 
+                        print('The Winner is ', winner)
 
 if __name__ == '__main__' : 
         main()
