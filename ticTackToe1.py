@@ -40,6 +40,7 @@ def printBoard(board,boardSize) :
 
         for i in range(0,boardSize) : 
                 for j in range(0,boardSize) : 
+                        print('\t', end='')
                         print(board[i][j],end='')
                         print('\t', end='')
                 print('\n')
@@ -66,30 +67,31 @@ def diagonalMatch(board, boardSize) :
         return 0
 
 
-def colMatch(board, boardSize) : 
-
-        for i in range (0, boardSize) : 
-                colSet = set(board[0])
-                if len(colSet) == 1 : 
-                        return board[i][0]
-
-        return 0
-
-
 def rowMatch(board, boardSize) : 
 
-        rowSet = set()
-        for i in range(0,boardSize) : 
-                for j in range(0, boardSize) : 
-                        rowSet.add(board[i][j])
-
-                if len(rowSet) == 1 : 
-                        return board[i][0]
+        for i in range (0, boardSize) : 
+                if board[i][0] != 0 : 
+                        colSet = set(board[0])
+                        if len(colSet) == 1 : 
+                                return board[i][0]
 
         return 0
 
 
+def colMatch(board, boardSize) : 
 
+        for i in range(0,boardSize) : 
+                if board[0][i] != 0 : 
+                        rowSet = set()
+                        for j in range(0, boardSize) : 
+                                rowSet.add(board[j][i])
+
+                        if len(rowSet) == 1 : 
+                                return board[0][i]
+
+        return 0
+
+#Matches if either a row or a column or a diagonal has been filled by a particular player. 
 def whoIsWinner(board, boardSize) : 
         
         winner = 0
@@ -111,18 +113,20 @@ def whoIsWinner(board, boardSize) :
 
         return winner
 
-def isInBound(playerInput) : 
-        if int(playerInput[0]) > 2 or int(playerInput[2]) > 2 : 
+
+#Checks if the the input given by the user is within the bounds.
+def isInBound(playerInput, boardSize) : 
+        if int(playerInput[0]) >= boardSize or int(playerInput[2]) >= boardSize : 
                 return 0
         else : 
                 return 1
 
-
-def addInput(board, playerInput, index) : 
-        while  isInBound(playerInput) and board[int(playerInput[0])][int(playerInput[2])] != 0 : 
+#Adds input from the user to the board. Checks if it is in the bounds of the board and if the input is being given at the right place or not. 
+def addInput(board, playerInput, boardSize, index) : 
+        while  isInBound(playerInput, boardSize) and board[int(playerInput[0])][int(playerInput[2])] != 0 : 
                 playerInput = list(raw_input('The position given by you is already filled. Try again: '))
 
-        if(isInBound(playerInput)) : 
+        if(isInBound(playerInput, boardSize)) : 
                 if index%2 == 0 : 
                         board[int(playerInput[0])][int(playerInput[2])] = 'X'
                 else : 
@@ -130,6 +134,7 @@ def addInput(board, playerInput, index) :
         else : 
                 print('Player %d : Loose your chance as you are out of bounds'%(index%2+1))
 
+#Main funcition that plays the game
 def playGame(board, boardSize) : 
         index = 0
         winner = 0
@@ -138,14 +143,14 @@ def playGame(board, boardSize) :
         while(gameSts != 'Q') : 
                 if index%2 == 0 : 
                         playerInput = list(raw_input('Player 1 enter your input : '))
-                        addInput(board, playerInput, index)
+                        addInput(board, playerInput, boardSize, index)
                         printBoard(board, boardSize)
                         winner = whoIsWinner(board, boardSize)
                         if winner != 0 : 
                                 return winner
                 else : 
                         playerInput = list(raw_input('Player 2 enter your input : '))
-                        addInput(board, playerInput, index)
+                        addInput(board, playerInput, boardSize, index)
                         printBoard(board, boardSize)
                         winner = whoIsWinner(board, boardSize)
                         if winner != 0 : 
@@ -168,9 +173,11 @@ def main() :
 
                 print('\n\n Tic Tac Toe board of size %d\n\n'%boardSize)
 
+                #Initialize and print the board the init stage of tic tac toe.
                 board = InitStage(boardSize)
                 printBoard(board, boardSize)
 
+                #Main winner for the game
                 winner = playGame(board, boardSize)
 
 if __name__ == '__main__' : 
